@@ -79,15 +79,15 @@ Channel.prototype = {
     send_all: function(client, msg, to_id) {
         var to_id = to_id || 'all';
 
-        this.send_op(client, to_id, msg);
-        this.send_users(client, to_id, msg);
+        if(client!=this.op) this.send_op(client, msg, to_id);
+        this.send_users(client, msg, to_id);
     },
 
     receive: function(client, s) {
         var cmd = new Command(s);
         var operator = cmd.pop();
         var fn = this.commands[operator];
-        if(fn) return fn(client, cmd);
+        if(fn) return fn.call(this, client, cmd);
     },
 
     commands: {
@@ -153,6 +153,7 @@ var socket = io.listen(server);
 var num = 0;
 socket.on('connection', function(client) {
     client.id = ++num;
+    client.send('id ' + client.id);
 
     var channel;
     client.on('message', function(data) {

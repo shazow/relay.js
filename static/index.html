@@ -14,8 +14,11 @@
 
 <body>
 
-
 <script type="text/javascript">
+
+function log(msg) {
+    console.log(msg);
+}
 
 var Command = function(msg) {
     this.msg = msg;
@@ -31,6 +34,7 @@ Command.prototype = {
 
 var Relay = function(socket) {
     this.channel = null;
+    this.user_id = null;
     this.socket = socket;
 
     var self = this;
@@ -44,18 +48,26 @@ Relay.prototype = {
         this.socket.send('create ' + code);
     },
     join: function(id) {
+        this.channel = id;
         this.socket.send('join ' + id);
     },
 
     _receive: function(data) {
-        console.log('<- ' + data);
+        log('<- ' + data);
         var cmd = new Command(data);
         var operator = cmd.pop();
         var fn = this._commands[operator];
-        if(fn) return fn(cmd);
+        if(fn) return fn.call(this, cmd);
+        else log('command not found: ' + operator);
     },
     _commands: {
-        'code': function(cmd) {
+        id: function(cmd) {
+            this.user_id = cmd.msg;
+        },
+        created: function(cmd) {
+            this.channel = cmd.msg;
+        },
+        code: function(cmd) {
             eval('(' + cmd.msg + ')();');
         }
     }
@@ -63,8 +75,36 @@ Relay.prototype = {
 
 var relay = new Relay(new io.Socket('localhost'));
 
+function client_code() {
+    var chat_target = document.createElement("pre");
+    document.body.appendChild(chat_target);
+    var form = document.createElement("form");
+    form.setAttribute("onsubmit", "return false;");
+    document.body.appendChild(form);
+    var input = document.createElement("input");
+    input.setAttribute("type", "text");
+    form.appendChild(input);
+    form.addEventListener("submit", function(e) {
+        send(input.value);
+        input.value = "";
+        return false;
+    }, false);
+    function chat(msg) {
+        chat_target.innerHTML += msg + '\n';
+    }
+    function send(msg) {
+        chat(relay.user_id + ': ' + msg);
+        relay.socket.send('msg ' + relay.user_id + ' all ' + msg);
+    }
+    relay._commands['msg'] = function(cmd) {
+        var from_id = cmd.pop();
+        cmd.pop();
+        chat(from_id + ': ' + cmd.msg);
+    }
+}
+
 </script>
 
 
-</body
+</body>
 </html>
