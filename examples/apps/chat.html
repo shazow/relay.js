@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+
+<title>chat app | relay.js</title>
+<meta charset="utf-8" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+<script src="http://cdn.socket.io/stable/socket.io.js"></script>
+<script src="../../src/relay.js"></script>
+
+</head>
+
+<body>
+
+<div style="border: 1px solid #eee; width: 400px; position: fixed; right: 0; top: 0;">
+    <h2 style="text-align: center; font-size: 12px; margin: 0; padding: 2px; background: #eee;">Relay Log</h2>
+    <pre id="log" style="padding: 5px;"></pre>
+</div>
+
+
+<script type="text/javascript">
+
+var log_target = document.getElementById('log');
+function log(msg, tag) {
+    var arrow = tag == 'receive' ? '&larr;' : '&rarr;';
+    log_target.innerHTML += arrow + ' ' + msg + '\n';
+}
+
+// Create relay
+
+var RELAY_HUB = {
+    'url': "myrelayhubip",
+    'port': 8000
+}
+var relay = new Relay(new io.Socket(RELAY_HUB.url, {port: RELAY_HUB.port}), log);
+
+
+// Define client code
+function client_code() {
+    var chat_target = document.createElement("pre");
+    document.body.appendChild(chat_target);
+    var form = document.createElement("form");
+    form.setAttribute("onsubmit", "return false;");
+    document.body.appendChild(form);
+    var input = document.createElement("input");
+    input.setAttribute("type", "text");
+    form.appendChild(input);
+    form.addEventListener("submit", function(e) {
+        send(input.value);
+        input.value = "";
+        return false;
+    }, false);
+    function chat(msg) {
+        chat_target.innerHTML += msg + '\n';
+    }
+    function send(msg) {
+        chat(relay.user_id + ': ' + msg);
+        relay.send('msg ' + relay.user_id + ' all ' + msg);
+    }
+    relay.on('msg', function(cmd) {
+        var from_id = cmd.pop();
+        cmd.pop();
+        chat(from_id + ': ' + cmd.data);
+    });
+}
+
+// Host runs the same client code in this case.
+client_code();
+
+// Create relay channel with client code
+relay.create(client_code);
+
+</script>
+
+</body>
+</html>
+
+</body>
+</html>
