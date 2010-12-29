@@ -73,7 +73,7 @@ Relay.prototype = {
     }
 }
 
-var relay = new Relay(new io.Socket('localhost'));
+var relay = new Relay(new io.Socket(window.location.hostname));
 
 function client_code() {
     var chat_target = document.createElement("pre");
