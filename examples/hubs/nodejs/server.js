@@ -5,11 +5,9 @@ var util = require('util');
 var io = require('socket.io');
 
 
-var content = fs.readFileSync(__dirname + '/static/index.html');
-
 var server = http.createServer(function(req, res){
     res.writeHeader(200, {'Content-Type': 'text/html'}); 
-    res.write(content);
+    res.write('relay hub says hi.');
     res.end();
 });
 server.listen(8000);
