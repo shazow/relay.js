@@ -1,0 +1,32 @@
+<html lang="en">
+<head>
+
+
+<meta charset="utf-8" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+<title>relay.js</title>
+
+<script src="http://cdn.socket.io/stable/socket.io.js"></script>
+
+
+</head>
+
+<body>
+
+
+<script type="text/javascript">
+
+var socket = new io.Socket('localhost');
+
+socket.connect();
+socket.send('some data');
+
+socket.on('message', function(data){
+});
+
+</script>
+
+
+</body
+</html>
