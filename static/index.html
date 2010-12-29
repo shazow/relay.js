@@ -17,13 +17,51 @@
 
 <script type="text/javascript">
 
-var socket = new io.Socket('localhost');
+var Command = function(msg) {
+    this.msg = msg;
+}
+Command.prototype = {
+    pop: function() {
+        var i = this.msg.indexOf(' ');
+        var cmd = this.msg.slice(0, i);
+        this.msg = this.msg.slice(i+1);
+        return cmd;
+    }
+}
 
-socket.connect();
-socket.send('some data');
+var Relay = function(socket) {
+    this.channel = null;
+    this.socket = socket;
 
-socket.on('message', function(data){
-});
+    var self = this;
+    socket.connect();
+    socket.on('message', function(data) {
+        self._receive(data);
+    });
+}
+Relay.prototype = {
+    create: function(code) {
+        this.socket.send('create ' + code);
+    },
+    join: function(id) {
+        this.socket.send('join ' + id);
+    },
+
+    _receive: function(data) {
+        console.log('<- ' + data);
+        var cmd = new Command(data);
+        var operator = cmd.pop();
+        var fn = this._commands[operator];
+        if(fn) return fn(cmd);
+    },
+    _commands: {
+        'code': function(cmd) {
+            eval('(' + cmd.msg + ')();');
+        }
+    }
+}
+
+var relay = new Relay(new io.Socket('localhost'));
 
 </script>
 

@@ -31,16 +31,20 @@ Command.prototype = {
 
 
 var Channel = function(op, code) {
-    this.id = Channel.num++;
+    this.id = ++Channel.num;
     this.op = op;
     this.users = {};
     this.code = code;
+
+    op.send('created ' + this.id);
+    util.log('created channel ' + this.id +' with code: ' + code);
 }
 Channel.num = 0;
 Channel.prototype = {
     join: function(client) {
         this.users[client.id] = client;
-        client.send('code ' + this.payload);
+        this.op.send('joined ' + client.id);
+        client.send('code ' + this.code);
     },
     leave: function(client) {
         if(this.op != client) {
@@ -82,7 +86,8 @@ Channel.prototype = {
     receive: function(client, s) {
         var cmd = new Command(s);
         var operator = cmd.pop();
-        this.commands[operator](client, cmd);
+        var fn = this.commands[operator];
+        if(fn) return fn(client, cmd);
     },
 
     commands: {
@@ -120,16 +125,23 @@ var Relay = {
     receive: function(client, s) {
         var cmd = new Command(s);
         var operator = cmd.pop();
-        return Relay.commands[operator](client, cmd);
+        var fn = Relay.commands[operator];
+        if(fn) return fn(client, cmd);
     },
     commands: {
-        create: function(client, payload) {
-            var ch = new Channel(client);
+        create: function(client, cmd) {
+            var code = cmd.msg;
+            var ch = new Channel(client, code);
             Relay.channels[ch.id] = ch;
             return ch;
         },
-        join: function(client, channel_id) {
-            var ch = Relay.channels[ch.id];
+        join: function(client, cmd) {
+            var channel_id = cmd.msg;
+            var ch = Relay.channels[channel_id];
+            if(!ch) {
+                client.send('error Channel does not exist: ' + channel_id);
+                return;
+            }
             ch.join(client);
             return ch;
         }
@@ -138,7 +150,10 @@ var Relay = {
 
 
 var socket = io.listen(server);
+var num = 0;
 socket.on('connection', function(client) {
+    client.id = ++num;
+
     var channel;
     client.on('message', function(data) {
         if(channel) {
