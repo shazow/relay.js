@@ -4,23 +4,24 @@ Relay.js allows you to establish a one-to-many channel of communication from the
 
 ## How it works
 
-1. You open some HTML with the relay.js library and open a websocket to a relay hub. You can host your own hub, or use our public one (`hub.relayjs.com`):
+1. You open some HTML with the relay.js library and open a websocket to a relay hub.
+   You can host your own hub, or use our public one (`hub.relayjs.com`):
 
-    <script src="http://cdn.socket.io/stable/socket.io.js"></script>
-    <script src="https://github.com/shazow/relay.js/raw/master/src/relay.js"></script>
-    <script type="text/javascript">
-        // Open a socket to a hub using socket.io
-        var socket = new io.Socket("hub.relayjs.com");
+        <script src="http://cdn.socket.io/stable/socket.io.js"></script>
+        <script src="https://github.com/shazow/relay.js/raw/master/src/relay.js"></script>
+        <script type="text/javascript">
+            // Open a socket to a hub using socket.io
+            var socket = new io.Socket("hub.relayjs.com");
 
-        // Connect to the relay using the socket
-        var relay = new Relay(socket);
-    </script>
+            // Connect to the relay using the socket
+            var relay = new Relay(socket);
+        </script>
 
 2. Create a channel on the relay hub with a client logic payload:
 
-    relay.create(function() {
-        alert('Hello World.');
-    });
+        relay.create(function() {
+            alert('Hello World.');
+        });
 
 3. Open your HTML in your browser to execute the code. When the channel is ready, the `relay.channel` variable will contain the channel id. Now you can invite people to join your relay channel using any compatible client, or use the example one provided here:
 
