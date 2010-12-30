@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+
+<title>relay.js simple client</title>
+<meta charset="utf-8" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+<script src="http://cdn.socket.io/stable/socket.io.js"></script>
+<script src="https://github.com/shazow/relay.js/raw/master/src/relay.js"></script>
+
+</head>
+
+<body>
+
+<script type="text/javascript">
+var relay = new Relay(new io.Socket("hub.relayjs.com", {port: 8080}));
+
+// Join channel
+if(window.location.hash.slice(0,3) == "#!/") {
+    var channel = window.location.hash.slice(3);
+    relay.join(channel);
+}
+</script>
+
+</body>
+</html>
