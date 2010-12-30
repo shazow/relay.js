@@ -10,7 +10,7 @@ var server = http.createServer(function(req, res){
     res.write('relay hub says hi.');
     res.end();
 });
-server.listen(8000);
+server.listen(8080);
 
 
 
