@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+
+<title>whiteboard app | relay.js</title>
+<meta charset="utf-8" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+<script src="http://cdn.socket.io/stable/socket.io.js"></script>
+<script src="https://github.com/shazow/relay.js/raw/master/src/relay.js"></script>
+
+</head>
+
+<body>
+
+<script type="text/javascript">
+
+function log(msg, tag) {
+    var arrow = tag == 'receive' ? '<-' : '->';
+    console && console.log && console.log(arrow + ' ' + msg);
+}
+
+// Create relay
+
+var relay = new Relay(new io.Socket("hub.relayjs.com", {port: 8080}), log);
+
+// Define client code
+function client_code() {
+    var canvas = document.createElement("canvas");
+    canvas.setAttribute('width', 800);
+    canvas.setAttribute('height', 600);
+    document.body.appendChild(canvas);
+
+    var ctx = canvas.getContext('2d');
+    ctx.strokeStyle = 'rgb(0,0,0)';
+
+    var draw = false;
+    var lastpos = null;
+    canvas.addEventListener('mousedown', function(e) { draw = true; }, false);
+    canvas.addEventListener('mouseup', function(e) { draw = false; lastpos = null; }, false);
+    window.addEventListener('mousemove', function(e) {
+        if(!draw) return;
+
+        var x = e.pageX, y = e.pageY;
+        if(lastpos) send(lastpos, [x,y]);
+        lastpos = [x,y];
+    }, false);
+    function receive(pos, pos2) {
+        ctx.beginPath();
+        ctx.moveTo(pos[0], pos[1]);
+        ctx.lineTo(pos2[0], pos2[1]);
+        ctx.stroke();
+    }
+    function send(pos, pos2) {
+        receive(pos, pos2);
+        relay.send('msg ' + relay.user_id + ' all ' + pos[0] + ' ' + pos[1] + ' ' + pos2[0] + ' ' + pos2[1]);
+    }
+    relay.on('msg', function(cmd) {
+        var from_id = cmd.pop();
+        cmd.pop();
+        var x1 = cmd.pop();
+        var y1 = cmd.pop();
+        var x2 = cmd.pop();
+        var y2 = cmd.data;
+        receive([Number(x1), Number(y1)], [Number(x2), Number(y2)]);
+    });
+}
+
+// Host runs the same client code in this case.
+client_code();
+
+// Create relay channel with client code
+relay.create(client_code);
+
+</script>
+
+</body>
+</html>
+
+</body>
+</html>

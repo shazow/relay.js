@@ -61,12 +61,13 @@ You can build more command logic on top of the `msg` command.
 
 ## What can you use this for?
 
-See the [examples](https://github.com/shazow/relay.js/tree/master/examples) directory. More coming soon, such as:
+See the [examples](https://github.com/shazow/relay.js/tree/master/examples) directory.
 
+* Chat
 * Collaborative whiteboard
-* Map-reduce cluster
-* 1v1 board game (chess?)
-* MMORPG with channel portals
+* (Soon) Map-reduce cluster
+* (Soon) 1v1 board game (chess?)
+* (Someday) MMORPG with channel portals
 
 ## TODO
 
