@@ -52,8 +52,16 @@ function client_code() {
     }
     relay.on('msg', function(cmd) {
         var from_id = cmd.pop();
-        cmd.pop();
+        var to_id = cmd.pop();
         var x1 = cmd.pop();
+        if(x1=='reset') {
+            var img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+            }
+            img.src = cmd.data;
+            return;
+        }
         var y1 = cmd.pop();
         var x2 = cmd.pop();
         var y2 = cmd.data;
@@ -71,6 +79,12 @@ relay.on('created', function(cmd) {
     var div = document.createElement("div");
     div.innerHTML += 'Invite your friends: <a href="'+url+'">'+url+'</a>';
     document.body.appendChild(div);
+});
+relay.on('joined', function(cmd) {
+    var c = document.getElementsByTagName('canvas')[0];
+    var data = c.toDataURL("image/png");
+    var to_id = cmd.data;
+    relay.send('msg ' + relay.user_id + ' ' + to_id + ' reset ' + data);
 });
 relay.create(client_code);
 
