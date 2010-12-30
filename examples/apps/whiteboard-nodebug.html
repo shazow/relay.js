@@ -14,21 +14,16 @@
 
 <script type="text/javascript">
 
-function log(msg, tag) {
-    var arrow = tag == 'receive' ? '<-' : '->';
-    console && console.log && console.log(arrow + ' ' + msg);
-}
-
 // Create relay
 
-var relay = new Relay(new io.Socket("hub.relayjs.com", {port: 8080}), log);
+var relay = new Relay(new io.Socket("hub.relayjs.com", {port: 8080}));
 
 // Define client code
 function client_code() {
     var canvas = document.createElement("canvas");
     canvas.setAttribute('width', 800);
     canvas.setAttribute('height', 600);
-    canvas.setAttribute('style', 'background: #fdfdfd;');
+    canvas.setAttribute('style', 'background: #fafafa; border: 1px solid #eee; cursor: crosshair;');
     document.body.appendChild(canvas);
 
     var ctx = canvas.getContext('2d');
@@ -70,6 +65,13 @@ function client_code() {
 client_code();
 
 // Create relay channel with client code
+relay.on('created', function(cmd) {
+    relay.channel = cmd.data;
+    var url = 'http://relayjs.com/client/simple.html#!/' + cmd.data;
+    var div = document.createElement("div");
+    div.innerHTML += 'Invite your friends: <a href="'+url+'">'+url+'</a>';
+    document.body.appendChild(div);
+});
 relay.create(client_code);
 
 </script>
