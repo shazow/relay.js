@@ -31,12 +31,16 @@ function client_code() {
 
     var draw = false;
     var lastpos = null;
-    canvas.addEventListener('mousedown', function(e) { draw = true; }, false);
-    canvas.addEventListener('mouseup', function(e) { draw = false; lastpos = null; }, false);
+    canvas.addEventListener('mousedown', function(e) {
+        draw = true;
+    }, false);
+    canvas.addEventListener('mouseup', function(e) {
+        draw = false; lastpos = null;
+    }, false);
     window.addEventListener('mousemove', function(e) {
         if(!draw) return;
 
-        var x = e.pageX, y = e.pageY;
+        var x = e.pageX-6, y = e.pageY-6;
         if(lastpos) send(lastpos, [x,y]);
         lastpos = [x,y];
     }, false);

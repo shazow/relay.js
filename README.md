@@ -2,6 +2,8 @@
 
 Relay.js allows you to establish a one-to-many channel of communication from the comfort of your browser.
 
+Want to skip to the juice and try it? [Go here to make a whiteboard app channel](http://relayjs.com/apps/whiteboard-no_debug.html).
+
 ## How it works
 
 1. You open some HTML with the relay.js library and open a websocket to a relay hub. You can host your own hub, or use a public one:
