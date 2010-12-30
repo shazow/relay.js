@@ -33,11 +33,6 @@ Relay.js allows you to establish a one-to-many channel of communication from the
 4. When somebody connects to your channel, your browser will get `joined` message with the user id. The person who joined will receive the client logic payload you defined earlier and execute it. They should see a "Hello World" alert pop up.
 
 
-## More examples
-
-See the [examples](https://github.com/shazow/relay.js/tree/master/examples) directory.
-
-
 ## Relay.js Hub API
 
 There is an example implementation of a Relay.js hub using node.js under [examples/hubs/nodejs](https://github.com/shazow/relay.js/tree/master/examples/hubs/nodejs).
@@ -66,6 +61,15 @@ The authoratative client implementation lives in [src/relay.js](https://github.c
 
 You can build more command logic on top of the `msg` command.
 
+
+## What can you use this for?
+
+See the [examples](https://github.com/shazow/relay.js/tree/master/examples) directory. More coming soon, such as:
+
+* Collaborative whiteboard
+* Map-reduce cluster
+* 1v1 board game (chess?)
+* MMORPG with channel portals
 
 ## TODO
 
