@@ -48,6 +48,7 @@ There is an example implementation of a Relay.js hub using node.js under [exampl
 The authoratative client implementation lives in [src/relay.js](https://github.com/shazow/relay.js/blob/master/src/relay.js).
 
 * `id <user id>`: Your user id, received upon connecting.
+* `error <message>`: Error message.
 * `code <code>`: (When joining) Client code sent by the channel operator, should be executed.
 * `destroyed`: (When joining) Channel is destroyed because the operator left.
 * `created <channel id>`: (When creating) Channel id of the created channel.
