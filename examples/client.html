@@ -28,11 +28,7 @@ function log(msg, tag) {
 
 // Create relay
 
-var RELAY_HUB = {
-    'url': "myrelayhubip",
-    'port': 8000
-}
-var relay = new Relay(new io.Socket(RELAY_HUB.url, {port: RELAY_HUB.port}), log);
+var relay = new Relay(new io.Socket("hub.relayjs.com", {port: 8080}), log);
 
 
 // Join channel
