@@ -1,8 +1,8 @@
 # What if you could host a server in your browser?
 
-Relay.js allows you to establish a one-to-many channel of communication from the comfort of your browser.
+Relay.js allows you to establish a one-to-many channel of communication from the comfort of your browser. It uses [Socket.IO](http://socket.io/) to establish a websocket from your browser to the relay hub, and from the other users to the relay hub.
 
-Want to skip to the juice and try it? [Go here to make a whiteboard app channel](http://relayjs.com/apps/whiteboard-no_debug.html).
+Want to skip to the juice and try it? [Go here to make a whiteboard app channel](http://relayjs.com/apps/whiteboard-no_debug.html) ([Source](https://github.com/shazow/relay.js/blob/master/examples/apps/whiteboard-no_debug.html)).
 
 ## How it works
 
