@@ -4,17 +4,13 @@ Relay.js allows you to establish a one-to-many channel of communication from the
 
 ## How it works
 
-**Note**: hub.relayjs.com is not ready yet, coming soon. For now, you can use 173.230.158.237:8000.
-
-1. You open some HTML with the relay.js library and open a websocket to a relay hub.
-
-   You can host your own hub, or use our public one (`hub.relayjs.com`):
+1. You open some HTML with the relay.js library and open a websocket to a relay hub. You can host your own hub, or use a public one:
 
         <script src="http://cdn.socket.io/stable/socket.io.js"></script>
         <script src="https://github.com/shazow/relay.js/raw/master/src/relay.js"></script>
         <script type="text/javascript">
             // Open a socket to a hub using socket.io
-            var socket = new io.Socket("hub.relayjs.com");
+            var socket = new io.Socket('hub.relayjs.com', {port: 8080});
 
             // Connect to the relay using the socket
             var relay = new Relay(socket);
