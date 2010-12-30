@@ -1,0 +1,44 @@
+<html lang="en">
+<head>
+
+<title>relay.js client</title>
+<meta charset="utf-8" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+<script src="http://cdn.socket.io/stable/socket.io.js"></script>
+<script src="https://github.com/shazow/relay.js/raw/master/src/relay.js"></script>
+
+</head>
+
+<body>
+
+<div style="border: 1px solid #eee; width: 400px; position: fixed; right: 0; top: 0;">
+    <h2 style="text-align: center; font-size: 12px; margin: 0; padding: 2px; background: #eee;">Relay Log</h2>
+    <pre id="log" style="padding: 5px;"></pre>
+</div>
+
+
+<script type="text/javascript">
+
+var log_target = document.getElementById('log');
+function log(msg, tag) {
+    var arrow = tag == 'receive' ? '&larr;' : '&rarr;';
+    log_target.innerHTML += arrow + ' ' + msg + '\n';
+}
+
+// Create relay
+
+var relay = new Relay(new io.Socket("hub.relayjs.com", {port: 8080}), log);
+
+
+// Join channel
+if(window.location.hash.slice(0,3) == "#!/") {
+    var channel = window.location.hash.slice(3);
+    relay.join(channel);
+}
+
+</script>
+
+
+</body>
+</html>
